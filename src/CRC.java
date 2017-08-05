@@ -8,7 +8,7 @@ class CRC {
 
     private void computeCRC() {
         String temp;
-        int start, k, bits = 0;
+        int start, k, bits;
 
         for (int i = 0; i < gX.length() - 1; i++)
             messageText = messageText + 0;
@@ -16,11 +16,19 @@ class CRC {
         start = findStart(messageText);
         temp = messageText.substring(start, gX.length());
         start = start + gX.length();
-        while (start != messageText.length() - 1) {
-            if (temp.length() != gX.length()) {
-                bits = gX.length() - temp.length();
+        while (start != messageText.length()) {
+            if (messageText.length() - start > gX.length()) {
+                if (gX.length() != temp.length()) {
+                    bits = gX.length() - temp.length();
+                    temp = addBits(temp, start, bits);
+                    start += bits;
+                }
+            }
+            else {
+                bits = messageText.length() - start;
                 temp = addBits(temp, start, bits);
                 start += bits;
+                continue;
             }
             temp = calculateXOR(temp, gX);
             k = findStart(temp);
